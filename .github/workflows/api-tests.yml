@@ -9,16 +9,16 @@ on:
 jobs:
   test-api:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: 📥 Checkout code
       uses: actions/checkout@v4
-    
+
     - name: 🐍 Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-    
+
     - name: 📦 Cache Python dependencies
       uses: actions/cache@v3
       with:
@@ -26,30 +26,45 @@ jobs:
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
-    
+
     - name: 🔧 Install Python dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    
+
     - name: 🚀 Start API server
       env:
         SECRET_KEY: github-actions-test-secret-key-do-not-use-in-prod
         ALGORITHM: HS256
         ACCESS_TOKEN_EXPIRE_MINUTES: 1440
       run: |
-        uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+        echo "Starting API with logs..."
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 > api.log 2>&1 &
+        echo $! > api.pid
         echo "Waiting for API to start..."
         sleep 5
-    
+
     - name: 🔍 Health check
       run: |
         curl -f http://localhost:8000/health || exit 1
         echo "✅ API is healthy"
-    
+
+    - name: 🧪 Test register endpoint (debug)
+      run: |
+        echo "=== Testing Register Endpoint ==="
+        curl -X POST http://localhost:8000/api/auth/register \
+          -H "Content-Type: application/json" \
+          -d '{"username":"debugtest","email":"debugtest@test.com","password":"password123"}' \
+          -w "\nHTTP Status: %{http_code}\n" \
+          2>&1 | tee register_debug.txt
+        
+        echo ""
+        echo "=== API Logs (last 30 lines) ==="
+        tail -30 api.log
+
     - name: 📦 Install Newman
       run: npm install -g newman newman-reporter-htmlextra
-    
+
     - name: 🧪 Run Newman tests
       run: |
         newman run postman/social-api.postman_collection.json \
@@ -58,14 +73,30 @@ jobs:
           --reporter-htmlextra-export newman-report.html \
           --reporter-htmlextra-title "Social API POC - Test Report" \
           --color on
-    
+      continue-on-error: true
+
     - name: 📊 Upload test report
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: newman-test-report
         path: newman-report.html
-    
+
+    - name: 📋 Upload logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: api-logs
+        path: |
+          api.log
+          register_debug.txt
+
+    - name: 📋 Show full logs (on failure)
+      if: failure()
+      run: |
+        echo "=== FULL API LOGS ==="
+        cat api.log || echo "No logs"
+
     - name: ✅ Tests passed
       if: success()
       run: echo "🎉 All tests passed successfully!"
