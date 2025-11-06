@@ -30,9 +30,9 @@ class PostRepository:
         """
         # Trier par date décroissante
         sorted_posts = sorted(self._posts, key=lambda p: p.created_at, reverse=True)
-        
-        # Filtrer par cursor si présent
-        if cursor:
+
+        # Filtrer par cursor si présent ET non vide
+        if cursor and cursor.strip():
             try:
                 cursor_date = datetime.fromisoformat(cursor)
                 sorted_posts = [p for p in sorted_posts if p.created_at < cursor_date]

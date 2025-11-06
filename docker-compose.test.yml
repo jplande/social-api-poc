@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # API principale
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=test-secret-key-for-ci
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  # Newman pour exécuter les tests
+  newman:
+    image: postman/newman:alpine
+    depends_on:
+      api:
+        condition: service_healthy
+    volumes:
+      - ./postman:/etc/newman
+    environment:
+      - BASE_URL=http://api:8000
+    command: >
+      run /etc/newman/social-api.postman_collection.json
+      -e /etc/newman/social-api-poc-local.postman_environment.json
+      --env-var "base_url=http://api:8000"
+      --color on
+      --delay-request 100
+    restart: "no"
+
+  # (Optionnel) Reporter HTML
+  newman-reporter:
+    image: postman/newman:alpine
+    depends_on:
+      newman:
+        condition: service_completed_successfully
+    volumes:
+      - ./postman:/etc/newman
+      - ./reports:/reports
+    command: >
+      run /etc/newman/social-api.postman_collection.json
+      -e /etc/newman/social-api-poc-local.postman_environment.json
+      --env-var "base_url=http://api:8000"
+      -r htmlextra
+      --reporter-htmlextra-export /reports/newman-report.html
+      --reporter-htmlextra-title "Social API POC - Docker Test Report"
+    restart: "no"
+    profiles:
+      - report
+
+# Pour exécuter :
+# docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+#
+# Pour générer aussi le rapport HTML :
+# docker-compose -f docker-compose.test.yml --profile report up --abort-on-container-exit

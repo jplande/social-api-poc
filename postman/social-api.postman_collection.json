@@ -1,0 +1,1211 @@
+{
+	"info": {
+		"_postman_id": "social-api-poc-collection",
+		"name": "Social API POC",
+		"description": "Collection complète pour tester l'API de réseau social avec tests automatisés",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has status healthy\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(\"healthy\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/health",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"health"
+					]
+				},
+				"description": "Vérifie que l'API est en ligne"
+			},
+			"response": []
+		},
+		{
+			"name": "Register User 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response has user data\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData).to.have.property('username');",
+							"    pm.expect(jsonData).to.have.property('email');",
+							"    pm.expect(jsonData.username).to.eql(\"alice\");",
+							"    pm.expect(jsonData.email).to.eql(\"alice@test.com\");",
+							"});",
+							"",
+							"pm.test(\"Password is not returned\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.not.have.property('password');",
+							"    pm.expect(jsonData).to.not.have.property('hashed_password');",
+							"});",
+							"",
+							"// Sauvegarder l'ID de l'utilisateur",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"user1_id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"alice\",\n    \"email\": \"alice@test.com\",\n    \"password\": \"password123\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/register",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				},
+				"description": "Inscription du premier utilisateur (Alice)"
+			},
+			"response": []
+		},
+		{
+			"name": "Register User 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response has user data\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData.username).to.eql(\"bob\");",
+							"    pm.expect(jsonData.email).to.eql(\"bob@test.com\");",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"user2_id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"bob\",\n    \"email\": \"bob@test.com\",\n    \"password\": \"password456\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/register",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				},
+				"description": "Inscription du second utilisateur (Bob)"
+			},
+			"response": []
+		},
+		{
+			"name": "Register Duplicate Email (Should Fail)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Error message is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).to.include(\"Email already registered\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"alice2\",\n    \"email\": \"alice@test.com\",\n    \"password\": \"password789\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/register",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				},
+				"description": "Test de duplication d'email (doit échouer)"
+			},
+			"response": []
+		},
+		{
+			"name": "Login User 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has access token\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('access_token');",
+							"    pm.expect(jsonData).to.have.property('token_type');",
+							"    pm.expect(jsonData.token_type).to.eql(\"bearer\");",
+							"    pm.expect(jsonData.access_token).to.be.a('string');",
+							"    pm.expect(jsonData.access_token.length).to.be.above(20);",
+							"});",
+							"",
+							"// Sauvegarder le token",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"user1_token\", jsonData.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"alice@test.com\",\n    \"password\": \"password123\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				},
+				"description": "Connexion d'Alice et récupération du JWT"
+			},
+			"response": []
+		},
+		{
+			"name": "Login User 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has access token\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('access_token');",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"user2_token\", jsonData.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"bob@test.com\",\n    \"password\": \"password456\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				},
+				"description": "Connexion de Bob"
+			},
+			"response": []
+		},
+		{
+			"name": "Login Invalid Credentials (Should Fail)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Error message is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).to.include(\"Incorrect email or password\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"alice@test.com\",\n    \"password\": \"wrongpassword\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				},
+				"description": "Test de connexion avec mauvais mot de passe"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Post 1 (Alice)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Post has correct structure\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData).to.have.property('user_id');",
+							"    pm.expect(jsonData).to.have.property('username');",
+							"    pm.expect(jsonData).to.have.property('content');",
+							"    pm.expect(jsonData).to.have.property('likes_count');",
+							"    pm.expect(jsonData).to.have.property('is_liked_by_me');",
+							"    pm.expect(jsonData).to.have.property('created_at');",
+							"});",
+							"",
+							"pm.test(\"Post content is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content).to.eql(\"Mon premier post sur ce réseau social!\");",
+							"    pm.expect(jsonData.username).to.eql(\"alice\");",
+							"    pm.expect(jsonData.likes_count).to.eql(0);",
+							"    pm.expect(jsonData.is_liked_by_me).to.eql(false);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post1_id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"Mon premier post sur ce réseau social!\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/posts",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				},
+				"description": "Création du premier post par Alice"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Post 2 (Bob)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Post content is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.username).to.eql(\"bob\");",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post2_id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user2_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"Salut tout le monde! C'est Bob 👋\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/posts",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				},
+				"description": "Création du second post par Bob"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Post 3 (Alice)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post3_id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"Quelle belle journée pour coder! 🚀\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/posts",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Post Without Auth (Should Fail)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"Post sans authentification\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/posts",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				},
+				"description": "Test de création de post sans token (doit échouer)"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Posts (Page 1)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has correct structure\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('posts');",
+							"    pm.expect(jsonData).to.have.property('next_cursor');",
+							"    pm.expect(jsonData).to.have.property('has_more');",
+							"    pm.expect(jsonData.posts).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"Posts are ordered by creation date (newest first)\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var posts = jsonData.posts;",
+							"    ",
+							"    if (posts.length > 1) {",
+							"        for (let i = 0; i < posts.length - 1; i++) {",
+							"            var date1 = new Date(posts[i].created_at);",
+							"            var date2 = new Date(posts[i + 1].created_at);",
+							"            pm.expect(date1.getTime()).to.be.at.least(date2.getTime());",
+							"        }",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"We have at least 3 posts\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.posts.length).to.be.at.least(3);",
+							"});",
+							"",
+							"// Sauvegarder le cursor pour la pagination",
+							"var jsonData = pm.response.json();",
+							"if (jsonData.next_cursor) {",
+							"    pm.environment.set(\"next_cursor\", jsonData.next_cursor);",
+							"}",
+							"",
+							"// Sauvegarder les IDs des posts de la première page pour vérifier les doublons",
+							"var postIds = jsonData.posts.map(p => p.id);",
+							"pm.environment.set(\"page1_post_ids\", JSON.stringify(postIds));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts?limit=10",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				},
+				"description": "Récupération de tous les posts (première page)"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Posts Without Auth (Should Fail)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				},
+				"description": "Test d'accès aux posts sans authentification"
+			},
+			"response": []
+		},
+		{
+			"name": "Like Post 1 (Bob likes Alice's post)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Like response is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('post_id');",
+							"    pm.expect(jsonData).to.have.property('liked');",
+							"    pm.expect(jsonData).to.have.property('likes_count');",
+							"    pm.expect(jsonData.liked).to.eql(true);",
+							"    pm.expect(jsonData.likes_count).to.eql(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user2_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts/{{post1_id}}/like",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post1_id}}",
+						"like"
+					]
+				},
+				"description": "Bob like le premier post d'Alice"
+			},
+			"response": []
+		},
+		{
+			"name": "Unlike Post 1 (Bob unlikes)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Unlike response is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.liked).to.eql(false);",
+							"    pm.expect(jsonData.likes_count).to.eql(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user2_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts/{{post1_id}}/like",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post1_id}}",
+						"like"
+					]
+				},
+				"description": "Bob retire son like (toggle)"
+			},
+			"response": []
+		},
+		{
+			"name": "Like Post 1 Again (Bob)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Like is toggled back to true\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.liked).to.eql(true);",
+							"    pm.expect(jsonData.likes_count).to.eql(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user2_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts/{{post1_id}}/like",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post1_id}}",
+						"like"
+					]
+				},
+				"description": "Bob re-like le post"
+			},
+			"response": []
+		},
+		{
+			"name": "Like Post 2 (Alice likes Bob's post)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Like is successful\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.liked).to.eql(true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts/{{post2_id}}/like",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post2_id}}",
+						"like"
+					]
+				},
+				"description": "Alice like le post de Bob"
+			},
+			"response": []
+		},
+		{
+			"name": "Like Non-Existent Post (Should Fail)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Error message is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).to.include(\"Post not found\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts/fake-post-id-123/like",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"fake-post-id-123",
+						"like"
+					]
+				},
+				"description": "Test de like sur un post inexistant"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Posts After Likes (Verify is_liked_by_me)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Likes are correctly reflected\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var posts = jsonData.posts;",
+							"    ",
+							"    // Trouver le post 1 (Alice's post que Bob a liké)",
+							"    var post1 = posts.find(p => p.id === pm.environment.get(\"post1_id\"));",
+							"    if (post1) {",
+							"        // Alice regarde, donc is_liked_by_me devrait être false",
+							"        pm.expect(post1.likes_count).to.be.at.least(1);",
+							"    }",
+							"    ",
+							"    // Trouver le post 2 (Bob's post qu'Alice a liké)",
+							"    var post2 = posts.find(p => p.id === pm.environment.get(\"post2_id\"));",
+							"    if (post2) {",
+							"        // Alice regarde, donc is_liked_by_me devrait être true",
+							"        pm.expect(post2.is_liked_by_me).to.eql(true);",
+							"        pm.expect(post2.likes_count).to.be.at.least(1);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				},
+				"description": "Vérifier que is_liked_by_me est correct après les likes"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Post 4 (Test Pagination)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"post4_id\", jsonData.id);",
+							"",
+							"// Attendre un peu pour que la date soit différente",
+							"setTimeout(function(){}, 100);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user2_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"Nouveau post pour tester la pagination!\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/posts",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				},
+				"description": "Créer un nouveau post pour tester la pagination"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Posts Page 2 (With Cursor)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"No duplicate posts between pages\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var page2Posts = jsonData.posts;",
+							"    ",
+							"    // Récupérer les IDs de la page 1",
+							"    var page1Ids = JSON.parse(pm.environment.get(\"page1_post_ids\") || '[]');",
+							"    ",
+							"    // Vérifier qu'aucun post de la page 2 n'est dans la page 1",
+							"    page2Posts.forEach(function(post) {",
+							"        pm.expect(page1Ids).to.not.include(post.id);",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"Cursor pagination works correctly\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('posts');",
+							"    pm.expect(jsonData).to.have.property('has_more');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts?limit=2&cursor={{next_cursor}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "2"
+						},
+						{
+							"key": "cursor",
+							"value": "{{next_cursor}}"
+						}
+					]
+				},
+				"description": "Test de pagination avec cursor (pas de doublons)"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Posts With Small Limit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Respects limit parameter\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.posts.length).to.be.at.most(2);",
+							"});",
+							"",
+							"pm.test(\"Has pagination metadata\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('has_more');",
+							"    ",
+							"    // Si has_more est true, next_cursor doit être présent",
+							"    if (jsonData.has_more) {",
+							"        pm.expect(jsonData.next_cursor).to.not.be.null;",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{user1_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/posts?limit=2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "2"
+						}
+					]
+				},
+				"description": "Test du paramètre limit"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+}
