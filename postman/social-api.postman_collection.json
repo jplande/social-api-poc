@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "social-api-poc-collection",
 		"name": "Social API POC",
-		"description": "Collection complète pour tester l'API de réseau social avec tests automatisés",
+		"description": "Collection avec données aléatoires pour éviter les conflits entre exécutions",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -24,6 +24,29 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Générer des identifiants uniques pour cette exécution",
+							"const timestamp = Date.now();",
+							"const randomSuffix = Math.random().toString(36).substring(7);",
+							"",
+							"// Créer des emails et usernames uniques",
+							"pm.environment.set(\"user1_username\", `alice_${timestamp}_${randomSuffix}`);",
+							"pm.environment.set(\"user1_email\", `alice_${timestamp}_${randomSuffix}@test.com`);",
+							"pm.environment.set(\"user1_password\", \"password123\");",
+							"",
+							"pm.environment.set(\"user2_username\", `bob_${timestamp}_${randomSuffix}`);",
+							"pm.environment.set(\"user2_email\", `bob_${timestamp}_${randomSuffix}@test.com`);",
+							"pm.environment.set(\"user2_password\", \"password456\");",
+							"",
+							"console.log(\"User 1:\", pm.environment.get(\"user1_email\"));",
+							"console.log(\"User 2:\", pm.environment.get(\"user2_email\"));"
+						],
+						"type": "text/javascript"
+					}
 				}
 			],
 			"request": {
@@ -38,7 +61,7 @@
 						"health"
 					]
 				},
-				"description": "Vérifie que l'API est en ligne"
+				"description": "Vérifie que l'API est en ligne et génère des identifiants uniques"
 			},
 			"response": []
 		},
@@ -58,8 +81,8 @@
 							"    pm.expect(jsonData).to.have.property('id');",
 							"    pm.expect(jsonData).to.have.property('username');",
 							"    pm.expect(jsonData).to.have.property('email');",
-							"    pm.expect(jsonData.username).to.eql(\"alice\");",
-							"    pm.expect(jsonData.email).to.eql(\"alice@test.com\");",
+							"    pm.expect(jsonData.username).to.include(\"alice\");",
+							"    pm.expect(jsonData.email).to.include(\"alice\");",
 							"});",
 							"",
 							"pm.test(\"Password is not returned\", function () {",
@@ -86,7 +109,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"alice\",\n    \"email\": \"alice@test.com\",\n    \"password\": \"password123\"\n}"
+					"raw": "{\n    \"username\": \"{{user1_username}}\",\n    \"email\": \"{{user1_email}}\",\n    \"password\": \"{{user1_password}}\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/auth/register",
@@ -99,7 +122,7 @@
 						"register"
 					]
 				},
-				"description": "Inscription du premier utilisateur (Alice)"
+				"description": "Inscription du premier utilisateur avec données dynamiques"
 			},
 			"response": []
 		},
@@ -117,8 +140,8 @@
 							"pm.test(\"Response has user data\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData).to.have.property('id');",
-							"    pm.expect(jsonData.username).to.eql(\"bob\");",
-							"    pm.expect(jsonData.email).to.eql(\"bob@test.com\");",
+							"    pm.expect(jsonData.username).to.include(\"bob\");",
+							"    pm.expect(jsonData.email).to.include(\"bob\");",
 							"});",
 							"",
 							"var jsonData = pm.response.json();",
@@ -138,7 +161,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"bob\",\n    \"email\": \"bob@test.com\",\n    \"password\": \"password456\"\n}"
+					"raw": "{\n    \"username\": \"{{user2_username}}\",\n    \"email\": \"{{user2_email}}\",\n    \"password\": \"{{user2_password}}\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/auth/register",
@@ -151,7 +174,7 @@
 						"register"
 					]
 				},
-				"description": "Inscription du second utilisateur (Bob)"
+				"description": "Inscription du second utilisateur avec données dynamiques"
 			},
 			"response": []
 		},
@@ -185,7 +208,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"alice2\",\n    \"email\": \"alice@test.com\",\n    \"password\": \"password789\"\n}"
+					"raw": "{\n    \"username\": \"alice_duplicate\",\n    \"email\": \"{{user1_email}}\",\n    \"password\": \"password789\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/auth/register",
@@ -240,7 +263,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"alice@test.com\",\n    \"password\": \"password123\"\n}"
+					"raw": "{\n    \"email\": \"{{user1_email}}\",\n    \"password\": \"{{user1_password}}\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/auth/login",
@@ -253,7 +276,7 @@
 						"login"
 					]
 				},
-				"description": "Connexion d'Alice et récupération du JWT"
+				"description": "Connexion avec les credentials dynamiques"
 			},
 			"response": []
 		},
@@ -290,7 +313,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"bob@test.com\",\n    \"password\": \"password456\"\n}"
+					"raw": "{\n    \"email\": \"{{user2_email}}\",\n    \"password\": \"{{user2_password}}\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/auth/login",
@@ -303,7 +326,7 @@
 						"login"
 					]
 				},
-				"description": "Connexion de Bob"
+				"description": "Connexion de Bob avec données dynamiques"
 			},
 			"response": []
 		},
@@ -337,7 +360,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"alice@test.com\",\n    \"password\": \"wrongpassword\"\n}"
+					"raw": "{\n    \"email\": \"{{user1_email}}\",\n    \"password\": \"wrongpassword\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/auth/login",
@@ -379,7 +402,7 @@
 							"pm.test(\"Post content is correct\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.content).to.eql(\"Mon premier post sur ce réseau social!\");",
-							"    pm.expect(jsonData.username).to.eql(\"alice\");",
+							"    pm.expect(jsonData.username).to.include(\"alice\");",
 							"    pm.expect(jsonData.likes_count).to.eql(0);",
 							"    pm.expect(jsonData.is_liked_by_me).to.eql(false);",
 							"});",
@@ -440,7 +463,7 @@
 							"",
 							"pm.test(\"Post content is correct\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.username).to.eql(\"bob\");",
+							"    pm.expect(jsonData.username).to.include(\"bob\");",
 							"});",
 							"",
 							"var jsonData = pm.response.json();",
