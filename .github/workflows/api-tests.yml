@@ -12,12 +12,28 @@ jobs:
   test-api:
     runs-on: ubuntu-latest
 
+    # Service PostgreSQL pour les tests
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: social_user
+          POSTGRES_PASSWORD: social_password
+          POSTGRES_DB: social_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     defaults:
       run:
         working-directory: ./
 
     steps:
-    - name: 📥 Checkout code
+    - name: Checkout code
       uses: actions/checkout@v4
 
     - name: 🐍 Set up Python
@@ -38,28 +54,24 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: 🗂️ Prepare mock data (if needed)
-      run: |
-        mkdir -p data
-        touch data/users.json data/posts.json
-
-    - name: 🚀 Start API server
+    - name: Start API server
       env:
         SECRET_KEY: github-actions-test-secret-key-do-not-use-in-prod
         ALGORITHM: HS256
         ACCESS_TOKEN_EXPIRE_MINUTES: 1440
+        DATABASE_URL: postgresql://social_user:social_password@localhost:5432/social_db
       run: |
         echo "Starting API with logs..."
         uvicorn app.main:app --host 0.0.0.0 --port 8000 > api.log 2>&1 &
         echo $! > api.pid
 
         echo "⏳ Waiting for API to start..."
-        for i in {1..10}; do
+        for i in {1..15}; do
           if curl -s http://localhost:8000/health > /dev/null; then
             echo "✅ API started successfully"
             break
           fi
-          echo "⏳ Waiting..."
+          echo "⏳ Waiting... (attempt $i/15)"
           sleep 2
         done
 
@@ -68,7 +80,7 @@ jobs:
         curl -f http://localhost:8000/health || exit 1
         echo "✅ API is healthy"
 
-    - name: 🧪 Debug register endpoint
+    - name: Debug register endpoint
       run: |
         echo "=== Testing Register Endpoint ==="
         curl -X POST http://localhost:8000/api/auth/register \
@@ -84,24 +96,24 @@ jobs:
     - name: 📦 Install Newman
       run: npm install -g newman newman-reporter-htmlextra
 
-    - name: 🧪 Run Newman tests
+    - name: Run Newman tests
       run: |
         newman run postman/social-api.postman_collection.json \
           -e postman/social-api-poc-local.postman_environment.json \
           -r cli,htmlextra \
           --reporter-htmlextra-export newman-report.html \
-          --reporter-htmlextra-title "Social API POC - Test Report" \
+          --reporter-htmlextra-title "Social API POC - Test Report (PostgreSQL)" \
           --color on
       continue-on-error: true
 
-    - name: 📊 Upload test report
+    - name: Upload test report
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: newman-test-report
         path: newman-report.html
 
-    - name: 📋 Upload logs
+    - name: Upload logs
       if: always()
       uses: actions/upload-artifact@v4
       with:
@@ -110,7 +122,7 @@ jobs:
           api.log
           register_debug.txt
 
-    - name: 📋 Show full logs (on failure)
+    - name: Show full logs (on failure)
       if: failure()
       run: |
         echo "=== FULL API LOGS ==="
@@ -118,4 +130,4 @@ jobs:
 
     - name: ✅ Tests passed
       if: success()
-      run: echo "🎉 All tests passed successfully!"
+      run: echo " All tests passed successfully with PostgreSQL!"

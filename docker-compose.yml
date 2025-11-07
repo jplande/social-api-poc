@@ -1,12 +1,39 @@
 version: '3.8'
 
 services:
+  # Base de données PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: social-api-postgres
+    environment:
+      POSTGRES_USER: social_user
+      POSTGRES_PASSWORD: social_password
+      POSTGRES_DB: social_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U social_user -d social_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # API FastAPI
   api:
     build: .
+    container_name: social-api
     ports:
       - "8000:8000"
     environment:
-      - SECRET_KEY=${SECRET_KEY}
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
+      - DATABASE_URL=postgresql://social_user:social_password@postgres:5432/social_db
     volumes:
       - ./app:/app/app
     command: uvicorn app.main:app --host 0.0.0.0 --reload
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
