@@ -2,13 +2,19 @@ name: API Tests
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches:
+      - '**'
   pull_request:
-    branches: [ main, master, develop ]
+    branches:
+      - '**'
 
 jobs:
   test-api:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./
 
     steps:
     - name: 📥 Checkout code
@@ -32,6 +38,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: 🗂️ Prepare mock data (if needed)
+      run: |
+        mkdir -p data
+        touch data/users.json data/posts.json
+
     - name: 🚀 Start API server
       env:
         SECRET_KEY: github-actions-test-secret-key-do-not-use-in-prod
@@ -41,15 +52,23 @@ jobs:
         echo "Starting API with logs..."
         uvicorn app.main:app --host 0.0.0.0 --port 8000 > api.log 2>&1 &
         echo $! > api.pid
-        echo "Waiting for API to start..."
-        sleep 5
+
+        echo "⏳ Waiting for API to start..."
+        for i in {1..10}; do
+          if curl -s http://localhost:8000/health > /dev/null; then
+            echo "✅ API started successfully"
+            break
+          fi
+          echo "⏳ Waiting..."
+          sleep 2
+        done
 
     - name: 🔍 Health check
       run: |
         curl -f http://localhost:8000/health || exit 1
         echo "✅ API is healthy"
 
-    - name: 🧪 Test register endpoint (debug)
+    - name: 🧪 Debug register endpoint
       run: |
         echo "=== Testing Register Endpoint ==="
         curl -X POST http://localhost:8000/api/auth/register \
@@ -60,7 +79,7 @@ jobs:
         
         echo ""
         echo "=== API Logs (last 30 lines) ==="
-        tail -30 api.log
+        tail -30 api.log || echo "No logs found"
 
     - name: 📦 Install Newman
       run: npm install -g newman newman-reporter-htmlextra
