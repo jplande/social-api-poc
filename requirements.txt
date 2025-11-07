@@ -5,10 +5,10 @@ pydantic-settings==2.6.1
 python-multipart==0.0.20
 email-validator>=2.0.0
 
-# Cryptographie et sécurité - IMPORTANT : ordre d'installation
-bcrypt>=4.1.0
+# Cryptographie et sécurité - IMPORTANT : versions compatibles
+bcrypt==4.0.1
 passlib[bcrypt]==1.7.4
-python-jose[cryptography]==3.4.0
+python-jose[cryptography]==3.3.0
 
 # Tests
 pytest==8.3.4
