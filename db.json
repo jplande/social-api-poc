@@ -1,0 +1,405 @@
+{
+  "articles": [
+    {
+      "id": "673b8f1a2d4c5e6f7a8b9c0d",
+      "title": "L'intelligence artificielle révolutionne le journalisme",
+      "image": "https://picsum.photos/800/600?random=1",
+      "content": "L'intelligence artificielle transforme profondément le secteur des médias. Les rédactions adoptent progressivement des outils d'IA pour automatiser certaines tâches répétitives et améliorer la qualité de leurs contenus.\n\nDe nombreux médias expérimentent déjà des chatbots pour interagir avec leurs lecteurs. Ces assistants virtuels permettent de répondre instantanément aux questions fréquentes et d'orienter les utilisateurs vers les contenus les plus pertinents.\n\nCependant, cette révolution soulève aussi des questions éthiques importantes. Comment garantir la transparence ? Comment préserver l'emploi des journalistes ? Ces défis restent au cœur des débats actuels.",
+      "summary": "Découvrez comment l'IA transforme le monde du journalisme et les défis qu'elle pose.",
+      "author": {
+        "name": "Sophie Martin",
+        "avatar": "https://i.pravatar.cc/150?img=5"
+      },
+      "publishedDate": "2024-11-05T10:30:00",
+      "tags": [
+        "technologie",
+        "intelligence artificielle",
+        "médias"
+      ],
+      "likes": 342,
+      "views": 5847,
+      "readingTime": 5,
+      "comments": []
+    },
+    {
+      "id": "673b8f1a2d4c5e6f7a8b9c0e",
+      "title": "Les énergies renouvelables battent des records",
+      "image": "https://picsum.photos/800/600?random=2",
+      "content": "L'année 2024 marque un tournant historique pour les énergies renouvelables. Les installations solaires et éoliennes ont connu une croissance sans précédent, dépassant toutes les prévisions des experts.\n\nLes gouvernements du monde entier intensifient leurs investissements dans ces technologies propres. L'Union européenne a notamment annoncé un plan ambitieux visant à atteindre 45% d'énergies renouvelables d'ici 2030.\n\nCette transition énergétique s'accompagne également d'innovations technologiques majeures dans le stockage de l'énergie. Les nouvelles batteries permettent désormais de pallier l'intermittence des sources renouvelables.",
+      "summary": "2024 : une année record pour les énergies renouvelables à travers le monde.",
+      "author": {
+        "name": "Thomas Dubois",
+        "avatar": "https://i.pravatar.cc/150?img=12"
+      },
+      "publishedDate": "2024-11-06T14:15:00",
+      "tags": [
+        "environnement",
+        "énergie",
+        "climat"
+      ],
+      "likes": 489,
+      "views": 8234,
+      "readingTime": 6,
+      "comments": [
+        {
+          "id": "c1",
+          "articleId": "673b8f1a2d4c5e6f7a8b9c0e",
+          "author": {
+            "name": "Marie Leclerc",
+            "avatar": "https://i.pravatar.cc/150?img=20"
+          },
+          "content": "Excellente nouvelle pour notre planète ! Il était temps d'accélérer.",
+          "createdAt": "2024-11-06T15:30:00",
+          "likes": 12
+        },
+        {
+          "id": "c2",
+          "articleId": "673b8f1a2d4c5e6f7a8b9c0e",
+          "author": {
+            "name": "Pierre Moreau",
+            "avatar": "https://i.pravatar.cc/150?img=33"
+          },
+          "content": "Et le nucléaire dans tout ça ? On oublie trop souvent cette option.",
+          "createdAt": "2024-11-06T16:45:00",
+          "likes": 8
+        }
+      ]
+    },
+    {
+      "id": "673b8f1a2d4c5e6f7a8b9c0f",
+      "title": "Euro 2024 : Les Bleus en demi-finale",
+      "image": "https://picsum.photos/800/600?random=3",
+      "content": "L'équipe de France a décroché sa qualification pour les demi-finales de l'Euro 2024 après une victoire spectaculaire en quart de finale. Le match s'est joué aux tirs au but après un score de 2-2 au terme des prolongations.\n\nMbappé a une fois de plus démontré son talent exceptionnel en inscrivant un doublé. Sa performance a électrisé le public et consolidé sa position de meilleur buteur du tournoi.\n\nLe prochain match s'annonce palpitant. Les Bleus affronteront l'Espagne, qui vient d'éliminer l'Allemagne dans un match tout aussi disputé. Rendez-vous mardi soir pour cette confrontation tant attendue.",
+      "summary": "Qualification historique des Bleus pour les demi-finales de l'Euro 2024.",
+      "author": {
+        "name": "Lucas Bernard",
+        "avatar": "https://i.pravatar.cc/150?img=8"
+      },
+      "publishedDate": "2024-11-06T22:45:00",
+      "tags": [
+        "sport",
+        "football"
+      ],
+      "likes": 892,
+      "views": 15432,
+      "readingTime": 4,
+      "comments": [
+        {
+          "id": "c3",
+          "articleId": "673b8f1a2d4c5e6f7a8b9c0f",
+          "author": {
+            "name": "Julie Petit",
+            "avatar": "https://i.pravatar.cc/150?img=25"
+          },
+          "content": "Quelle soirée incroyable ! Allez les Bleus ! 🇫🇷",
+          "createdAt": "2024-11-06T23:15:00",
+          "likes": 45
+        }
+      ]
+    },
+    {
+      "id": "673b8f1a2d4c5e6f7a8b9c10",
+      "title": "Nouvelle découverte archéologique en Égypte",
+      "image": "https://picsum.photos/800/600?random=4",
+      "content": "Des archéologues ont mis au jour une tombe pharaonique exceptionnellement bien préservée près de Louxor. Cette découverte majeure pourrait apporter un nouvel éclairage sur la période du Nouvel Empire égyptien.\n\nLa tombe contient de nombreux artefacts précieux, dont des bijoux, des sculptures et des papyrus parfaitement conservés. Les inscriptions hiéroglyphiques révèlent l'identité du propriétaire : un haut dignitaire de la cour du pharaon Ramsès II.\n\nLes chercheurs estiment que plusieurs années seront nécessaires pour étudier l'ensemble des trouvailles. Cette découverte confirme une fois de plus que l'Égypte antique recèle encore de nombreux secrets.",
+      "summary": "Une tombe pharaonique exceptionnelle découverte près de Louxor.",
+      "author": {
+        "name": "Émilie Rousseau",
+        "avatar": "https://i.pravatar.cc/150?img=15"
+      },
+      "publishedDate": "2024-11-05T08:00:00",
+      "tags": [
+        "culture",
+        "archéologie",
+        "histoire"
+      ],
+      "likes": 267,
+      "views": 4521,
+      "readingTime": 7,
+      "comments": []
+    },
+    {
+      "id": "673b8f1a2d4c5e6f7a8b9c11",
+      "title": "La Banque centrale européenne maintient ses taux",
+      "image": "https://picsum.photos/800/600?random=5",
+      "content": "Lors de sa réunion mensuelle, la BCE a décidé de maintenir ses taux directeurs inchangés pour le troisième mois consécutif. Cette décision intervient dans un contexte d'inflation toujours élevée mais en légère baisse.\n\nChristine Lagarde, présidente de la BCE, a justifié cette position prudente en soulignant la nécessité d'évaluer plus précisément l'impact des hausses précédentes. Les données économiques récentes montrent des signes encourageants mais restent fragiles.\n\nLes marchés financiers ont réagi positivement à cette annonce. Les analystes estiment qu'une première baisse des taux pourrait intervenir au début de l'année prochaine si la tendance actuelle se confirme.",
+      "summary": "La BCE maintient sa politique monétaire dans l'attente de nouveaux indicateurs.",
+      "author": {
+        "name": "Antoine Girard",
+        "avatar": "https://i.pravatar.cc/150?img=22"
+      },
+      "publishedDate": "2024-11-07T11:00:00",
+      "tags": [
+        "économie",
+        "finance"
+      ],
+      "likes": 156,
+      "views": 3214,
+      "readingTime": 5,
+      "comments": [
+        {
+          "id": "c4",
+          "articleId": "673b8f1a2d4c5e6f7a8b9c11",
+          "author": {
+            "name": "Sandra Cohen",
+            "avatar": "https://i.pravatar.cc/150?img=41"
+          },
+          "content": "Décision attendue mais prudente. Espérons une baisse bientôt.",
+          "createdAt": "2024-11-07T12:30:00",
+          "likes": 5
+        }
+      ]
+    },
+    {
+      "id": "673b8f1a2d4c5e6f7a8b9c12",
+      "title": "SpaceX réussit un nouveau lancement record",
+      "image": "https://picsum.photos/800/600?random=6",
+      "content": "SpaceX vient de réaliser son 90ème lancement de l'année, établissant un nouveau record dans l'industrie spatiale. La fusée Falcon 9 a placé en orbite une nouvelle constellation de satellites Starlink.\n\nElon Musk a salué cette performance exceptionnelle de ses équipes. L'entreprise vise désormais les 100 lancements avant la fin de l'année, un objectif qui semblait irréaliste il y a encore quelques années.\n\nCette cadence soutenue témoigne de la maturité atteinte par la technologie de réutilisation des fusées. Le premier étage utilisé lors de ce lancement avait déjà effectué 15 missions précédentes, un exploit remarquable.",
+      "summary": "SpaceX établit un nouveau record avec son 90ème lancement de l'année.",
+      "author": {
+        "name": "Nicolas Lambert",
+        "avatar": "https://i.pravatar.cc/150?img=18"
+      },
+      "publishedDate": "2024-11-06T19:30:00",
+      "tags": [
+        "technologie",
+        "espace",
+        "science"
+      ],
+      "likes": 521,
+      "views": 9876,
+      "readingTime": 4,
+      "comments": []
+    },
+    {
+      "id": "673b8f1a2d4c5e6f7a8b9c13",
+      "title": "Percée majeure dans le traitement d'Alzheimer",
+      "image": "https://picsum.photos/800/600?random=7",
+      "content": "Une équipe de chercheurs internationaux annonce des résultats prometteurs dans le traitement de la maladie d'Alzheimer. Un nouveau médicament expérimental a montré une efficacité significative lors des essais cliniques de phase 3.\n\nLe traitement agit en ciblant les plaques amyloïdes, caractéristiques de la maladie. Les patients traités ont montré un ralentissement notable du déclin cognitif sur une période de 18 mois.\n\nCes résultats suscitent un immense espoir pour les millions de personnes touchées par cette maladie neurodégénérative. Les autorités sanitaires devraient examiner la demande d'autorisation de mise sur le marché dans les prochains mois.",
+      "summary": "Un nouveau traitement prometteur contre Alzheimer montre des résultats encourageants.",
+      "author": {
+        "name": "Dr. Claire Fontaine",
+        "avatar": "https://i.pravatar.cc/150?img=45"
+      },
+      "publishedDate": "2024-11-07T09:15:00",
+      "tags": [
+        "santé",
+        "science",
+        "médecine"
+      ],
+      "likes": 734,
+      "views": 12456,
+      "readingTime": 8,
+      "comments": [
+        {
+          "id": "c5",
+          "articleId": "673b8f1a2d4c5e6f7a8b9c13",
+          "author": {
+            "name": "Robert Blanc",
+            "avatar": "https://i.pravatar.cc/150?img=52"
+          },
+          "content": "Formidable nouvelle ! Mon père est atteint, j'espère que ce traitement arrivera vite.",
+          "createdAt": "2024-11-07T10:00:00",
+          "likes": 28
+        },
+        {
+          "id": "c6",
+          "articleId": "673b8f1a2d4c5e6f7a8b9c13",
+          "author": {
+            "name": "Isabelle Roux",
+            "avatar": "https://i.pravatar.cc/150?img=38"
+          },
+          "content": "Il faut rester prudent, combien de faux espoirs avons-nous déjà eus ?",
+          "createdAt": "2024-11-07T10:45:00",
+          "likes": 15
+        }
+      ]
+    },
+    {
+      "id": "673b8f1a2d4c5e6f7a8b9c14",
+      "title": "La France adopte une nouvelle loi sur le climat",
+      "image": "https://picsum.photos/800/600?random=8",
+      "content": "L'Assemblée nationale a adopté hier soir une loi ambitieuse visant à accélérer la transition écologique. Le texte prévoit notamment l'interdiction progressive des véhicules thermiques et un renforcement des normes d'isolation des bâtiments.\n\nLe gouvernement estime que ces mesures permettront de réduire les émissions de gaz à effet de serre de 40% d'ici 2030. Des aides financières substantielles sont prévues pour accompagner les ménages dans cette transition.\n\nLe texte a suscité de vifs débats. Si les associations écologistes saluent une avancée, elles jugent néanmoins les mesures insuffisantes. L'opposition dénonce quant à elle un coût trop élevé pour les familles.",
+      "summary": "Adoption d'une loi climat ambitieuse visant à réduire les émissions de 40% d'ici 2030.",
+      "author": {
+        "name": "Jean-Marc Durand",
+        "avatar": "https://i.pravatar.cc/150?img=29"
+      },
+      "publishedDate": "2024-11-07T07:30:00",
+      "tags": [
+        "politique",
+        "environnement",
+        "climat"
+      ],
+      "likes": 423,
+      "views": 7893,
+      "readingTime": 6,
+      "comments": [
+        {
+          "id": "c7",
+          "articleId": "673b8f1a2d4c5e6f7a8b9c14",
+          "author": {
+            "name": "Pauline Mercier",
+            "avatar": "https://i.pravatar.cc/150?img=44"
+          },
+          "content": "C'est un bon début mais il faudra aller plus loin !",
+          "createdAt": "2024-11-07T08:15:00",
+          "likes": 19
+        }
+      ]
+    },
+    {
+      "id": "673b8f1a2d4c5e6f7a8b9c15",
+      "title": "Le nouveau iPhone bat des records de ventes",
+      "image": "https://picsum.photos/800/600?random=9",
+      "content": "Apple annonce des chiffres de ventes exceptionnels pour son dernier iPhone. Le modèle 15 Pro s'est écoulé à plus de 10 millions d'exemplaires durant son premier week-end de commercialisation.\n\nLes nouvelles fonctionnalités d'intelligence artificielle et l'amélioration spectaculaire de l'appareil photo séduisent les consommateurs. Le prix élevé ne semble pas freiner l'engouement pour le produit phare de la marque à la pomme.\n\nCette performance dépasse les attentes des analystes et propulse Apple vers une année record. L'action de l'entreprise a bondi de 5% à l'annonce de ces résultats.",
+      "summary": "L'iPhone 15 Pro établit un record de ventes dès son lancement.",
+      "author": {
+        "name": "Céline Marchand",
+        "avatar": "https://i.pravatar.cc/150?img=31"
+      },
+      "publishedDate": "2024-11-06T16:00:00",
+      "tags": [
+        "technologie",
+        "économie"
+      ],
+      "likes": 287,
+      "views": 6234,
+      "readingTime": 3,
+      "comments": []
+    },
+    {
+      "id": "673b8f1a2d4c5e6f7a8b9c16",
+      "title": "Le Louvre bat son record de fréquentation",
+      "image": "https://picsum.photos/800/600?random=10",
+      "content": "Le musée du Louvre vient de franchir la barre symbolique des 10 millions de visiteurs pour l'année 2024. C'est un record absolu qui dépasse même les chiffres d'avant la pandémie.\n\nL'exposition temporaire consacrée à Léonard de Vinci a particulièrement attiré les foules. Les touristes étrangers représentent 70% des visiteurs, témoignant du rayonnement international du musée parisien.\n\nPour faire face à cet afflux, la direction envisage d'étendre les horaires d'ouverture et de développer un système de réservation en ligne plus performant. L'objectif est d'améliorer l'expérience des visiteurs tout en préservant les œuvres.",
+      "summary": "Le Louvre accueille un nombre record de visiteurs en 2024.",
+      "author": {
+        "name": "Florence Deschamps",
+        "avatar": "https://i.pravatar.cc/150?img=36"
+      },
+      "publishedDate": "2024-11-05T15:45:00",
+      "tags": [
+        "culture",
+        "tourisme"
+      ],
+      "likes": 198,
+      "views": 4127,
+      "readingTime": 4,
+      "comments": [
+        {
+          "id": "c8",
+          "articleId": "673b8f1a2d4c5e6f7a8b9c16",
+          "author": {
+            "name": "Marc Lefevre",
+            "avatar": "https://i.pravatar.cc/150?img=49"
+          },
+          "content": "Génial mais il devient vraiment difficile de profiter des œuvres avec autant de monde...",
+          "createdAt": "2024-11-05T17:20:00",
+          "likes": 11
+        }
+      ]
+    }
+  ],
+  "comments": [
+    {
+      "id": "c1",
+      "articleId": "673b8f1a2d4c5e6f7a8b9c0e",
+      "author": {
+        "name": "Marie Leclerc",
+        "avatar": "https://i.pravatar.cc/150?img=20"
+      },
+      "content": "Excellente nouvelle pour notre planète ! Il était temps d'accélérer.",
+      "createdAt": "2024-11-06T15:30:00",
+      "likes": 12
+    },
+    {
+      "id": "c2",
+      "articleId": "673b8f1a2d4c5e6f7a8b9c0e",
+      "author": {
+        "name": "Pierre Moreau",
+        "avatar": "https://i.pravatar.cc/150?img=33"
+      },
+      "content": "Et le nucléaire dans tout ça ? On oublie trop souvent cette option.",
+      "createdAt": "2024-11-06T16:45:00",
+      "likes": 8
+    },
+    {
+      "id": "c3",
+      "articleId": "673b8f1a2d4c5e6f7a8b9c0f",
+      "author": {
+        "name": "Julie Petit",
+        "avatar": "https://i.pravatar.cc/150?img=25"
+      },
+      "content": "Quelle soirée incroyable ! Allez les Bleus ! 🇫🇷",
+      "createdAt": "2024-11-06T23:15:00",
+      "likes": 45
+    },
+    {
+      "id": "c4",
+      "articleId": "673b8f1a2d4c5e6f7a8b9c11",
+      "author": {
+        "name": "Sandra Cohen",
+        "avatar": "https://i.pravatar.cc/150?img=41"
+      },
+      "content": "Décision attendue mais prudente. Espérons une baisse bientôt.",
+      "createdAt": "2024-11-07T12:30:00",
+      "likes": 5
+    },
+    {
+      "id": "c5",
+      "articleId": "673b8f1a2d4c5e6f7a8b9c13",
+      "author": {
+        "name": "Robert Blanc",
+        "avatar": "https://i.pravatar.cc/150?img=52"
+      },
+      "content": "Formidable nouvelle ! Mon père est atteint, j'espère que ce traitement arrivera vite.",
+      "createdAt": "2024-11-07T10:00:00",
+      "likes": 28
+    },
+    {
+      "id": "c6",
+      "articleId": "673b8f1a2d4c5e6f7a8b9c13",
+      "author": {
+        "name": "Isabelle Roux",
+        "avatar": "https://i.pravatar.cc/150?img=38"
+      },
+      "content": "Il faut rester prudent, combien de faux espoirs avons-nous déjà eus ?",
+      "createdAt": "2024-11-07T10:45:00",
+      "likes": 15
+    },
+    {
+      "id": "c7",
+      "articleId": "673b8f1a2d4c5e6f7a8b9c14",
+      "author": {
+        "name": "Pauline Mercier",
+        "avatar": "https://i.pravatar.cc/150?img=44"
+      },
+      "content": "C'est un bon début mais il faudra aller plus loin !",
+      "createdAt": "2024-11-07T08:15:00",
+      "likes": 19
+    },
+    {
+      "id": "c8",
+      "articleId": "673b8f1a2d4c5e6f7a8b9c16",
+      "author": {
+        "name": "Marc Lefevre",
+        "avatar": "https://i.pravatar.cc/150?img=49"
+      },
+      "content": "Génial mais il devient vraiment difficile de profiter des œuvres avec autant de monde...",
+      "createdAt": "2024-11-05T17:20:00",
+      "likes": 11
+    },
+    {
+      "id": "f78a",
+      "articleId": "",
+      "author": {
+        "name": "Test User",
+        "avatar": "https://i.pravatar.cc/150?img=99"
+      },
+      "content": "Super article ! Merci pour le partage.",
+      "createdAt": "2024-11-07T15:00:00",
+      "likes": 0
+    }
+  ]
+}

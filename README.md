@@ -36,6 +36,7 @@ docker-compose up
 # Postman/Newman
 newman run postman/social-api.postman_collection.json
 
-# Pytest
-pytest
+# JSON-SERVER
+npx json-server db.json -p 3000
+
 ```
