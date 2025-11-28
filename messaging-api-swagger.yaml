@@ -1,0 +1,415 @@
+openapi: 3.0.3
+info:
+  title: Messaging API
+  description: |
+    API de messagerie permettant de gérer les messages avec filtrage par statut (lu/non lu).
+    
+    ## Fonctionnalités
+    - Voir tous les messages
+    - Créer un nouveau message
+    - Filtrer les messages par statut (lu/non lu)
+    - Marquer un message comme lu
+    - Récupérer un message spécifique
+  version: 1.0.0
+  contact:
+    name: Support API
+    email: support@messaging-api.com
+
+servers:
+  - url: http://localhost:8082/messaging-api
+    description: Serveur via Gravitee Gateway
+  - url: http://localhost:5000
+    description: Serveur de développement
+
+tags:
+  - name: Messages
+    description: Gestion des messages
+
+paths:
+  /messages:
+    get:
+      tags:
+        - Messages
+      summary: Récupérer tous les messages
+      description: Récupère la liste de tous les messages avec possibilité de filtrage par statut
+      operationId: getMessages
+      parameters:
+        - name: status
+          in: query
+          description: Filtrer par statut (read/unread)
+          required: false
+          schema:
+            type: string
+            enum:
+              - read
+              - unread
+          example: unread
+        - name: limit
+          in: query
+          description: Nombre maximum de messages à retourner
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+          example: 20
+        - name: offset
+          in: query
+          description: Nombre de messages à ignorer (pagination)
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          example: 0
+      responses:
+        '200':
+          description: Liste des messages récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+                  total:
+                    type: integer
+                    description: Nombre total de messages
+                    example: 42
+                  limit:
+                    type: integer
+                    example: 20
+                  offset:
+                    type: integer
+                    example: 0
+              examples:
+                all_messages:
+                  summary: Tous les messages
+                  value:
+                    messages:
+                      - id: "msg-001"
+                        sender: "alice@example.com"
+                        receiver: "bob@example.com"
+                        subject: "Réunion de demain"
+                        content: "N'oublie pas la réunion de demain à 10h."
+                        status: "unread"
+                        createdAt: "2024-11-28T09:00:00Z"
+                      - id: "msg-002"
+                        sender: "charlie@example.com"
+                        receiver: "bob@example.com"
+                        subject: "Rapport mensuel"
+                        content: "Voici le rapport du mois de novembre."
+                        status: "read"
+                        createdAt: "2024-11-27T14:30:00Z"
+                    total: 42
+                    limit: 20
+                    offset: 0
+                unread_only:
+                  summary: Messages non lus uniquement
+                  value:
+                    messages:
+                      - id: "msg-001"
+                        sender: "alice@example.com"
+                        receiver: "bob@example.com"
+                        subject: "Réunion de demain"
+                        content: "N'oublie pas la réunion de demain à 10h."
+                        status: "unread"
+                        createdAt: "2024-11-28T09:00:00Z"
+                    total: 15
+                    limit: 20
+                    offset: 0
+        '400':
+          description: Paramètres invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Bad Request"
+                message: "Le paramètre 'status' doit être 'read' ou 'unread'"
+    
+    post:
+      tags:
+        - Messages
+      summary: Créer un nouveau message
+      description: Crée un nouveau message dans le système
+      operationId: createMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreate'
+            examples:
+              simple_message:
+                summary: Message simple
+                value:
+                  sender: "alice@example.com"
+                  receiver: "bob@example.com"
+                  subject: "Bonjour"
+                  content: "Ceci est un message de test."
+              urgent_message:
+                summary: Message urgent
+                value:
+                  sender: "manager@example.com"
+                  receiver: "team@example.com"
+                  subject: "URGENT: Réunion d'urgence"
+                  content: "Réunion d'urgence à 15h dans la salle de conférence."
+      responses:
+        '201':
+          description: Message créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+              example:
+                id: "msg-003"
+                sender: "alice@example.com"
+                receiver: "bob@example.com"
+                subject: "Bonjour"
+                content: "Ceci est un message de test."
+                status: "unread"
+                createdAt: "2024-11-28T10:15:00Z"
+        '400':
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Bad Request"
+                message: "Le champ 'sender' est obligatoire"
+        '422':
+          description: Validation échouée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /messages/{messageId}:
+    get:
+      tags:
+        - Messages
+      summary: Récupérer un message spécifique
+      description: Récupère les détails d'un message par son ID
+      operationId: getMessageById
+      parameters:
+        - name: messageId
+          in: path
+          description: ID du message
+          required: true
+          schema:
+            type: string
+          example: "msg-001"
+      responses:
+        '200':
+          description: Message récupéré avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+              example:
+                id: "msg-001"
+                sender: "alice@example.com"
+                receiver: "bob@example.com"
+                subject: "Réunion de demain"
+                content: "N'oublie pas la réunion de demain à 10h."
+                status: "unread"
+                createdAt: "2024-11-28T09:00:00Z"
+        '404':
+          description: Message non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Not Found"
+                message: "Message avec l'ID 'msg-001' introuvable"
+    
+    patch:
+      tags:
+        - Messages
+      summary: Marquer un message comme lu
+      description: Met à jour le statut d'un message pour le marquer comme lu
+      operationId: markMessageAsRead
+      parameters:
+        - name: messageId
+          in: path
+          description: ID du message
+          required: true
+          schema:
+            type: string
+          example: "msg-001"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - read
+                  description: Nouveau statut du message
+              required:
+                - status
+            example:
+              status: "read"
+      responses:
+        '200':
+          description: Message mis à jour avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+              example:
+                id: "msg-001"
+                sender: "alice@example.com"
+                receiver: "bob@example.com"
+                subject: "Réunion de demain"
+                content: "N'oublie pas la réunion de demain à 10h."
+                status: "read"
+                createdAt: "2024-11-28T09:00:00Z"
+                readAt: "2024-11-28T10:30:00Z"
+        '404':
+          description: Message non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /messages/stats:
+    get:
+      tags:
+        - Messages
+      summary: Statistiques des messages
+      description: Récupère les statistiques sur les messages (nombre total, lus, non lus)
+      operationId: getMessageStats
+      responses:
+        '200':
+          description: Statistiques récupérées avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: Nombre total de messages
+                    example: 42
+                  read:
+                    type: integer
+                    description: Nombre de messages lus
+                    example: 27
+                  unread:
+                    type: integer
+                    description: Nombre de messages non lus
+                    example: 15
+              example:
+                total: 42
+                read: 27
+                unread: 15
+
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identifiant unique du message
+          example: "msg-001"
+        sender:
+          type: string
+          format: email
+          description: Email de l'expéditeur
+          example: "alice@example.com"
+        receiver:
+          type: string
+          format: email
+          description: Email du destinataire
+          example: "bob@example.com"
+        subject:
+          type: string
+          description: Sujet du message
+          example: "Réunion de demain"
+        content:
+          type: string
+          description: Contenu du message
+          example: "N'oublie pas la réunion de demain à 10h."
+        status:
+          type: string
+          enum:
+            - read
+            - unread
+          description: Statut du message
+          example: "unread"
+        createdAt:
+          type: string
+          format: date-time
+          description: Date de création du message
+          example: "2024-11-28T09:00:00Z"
+        readAt:
+          type: string
+          format: date-time
+          description: Date de lecture du message (si lu)
+          nullable: true
+          example: "2024-11-28T10:30:00Z"
+      required:
+        - id
+        - sender
+        - receiver
+        - subject
+        - content
+        - status
+        - createdAt
+
+    MessageCreate:
+      type: object
+      properties:
+        sender:
+          type: string
+          format: email
+          description: Email de l'expéditeur
+          example: "alice@example.com"
+        receiver:
+          type: string
+          format: email
+          description: Email du destinataire
+          example: "bob@example.com"
+        subject:
+          type: string
+          description: Sujet du message
+          minLength: 1
+          maxLength: 200
+          example: "Réunion de demain"
+        content:
+          type: string
+          description: Contenu du message
+          minLength: 1
+          maxLength: 5000
+          example: "N'oublie pas la réunion de demain à 10h."
+      required:
+        - sender
+        - receiver
+        - subject
+        - content
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Type d'erreur
+          example: "Bad Request"
+        message:
+          type: string
+          description: Message d'erreur détaillé
+          example: "Le champ 'sender' est obligatoire"
+      required:
+        - error
+        - message
