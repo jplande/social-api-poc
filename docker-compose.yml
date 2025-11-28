@@ -29,6 +29,21 @@ services:
       - frontend
     restart: unless-stopped
 
+  # JSON Server
+  jsonserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.jsonserver
+    container_name: json_server
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./db.json:/app/db.json
+    networks:
+      - app-network
+      - frontend
+    restart: unless-stopped
+
   # MongoDB pour Gravitee
   mongodb:
     image: mongo:${MONGODB_VERSION:-6.0.8}
@@ -73,6 +88,7 @@ services:
       - mongodb
       - elasticsearch
       - api
+      - jsonserver
     environment:
       - gravitee_management_mongodb_uri=mongodb://mongodb:27017/gravitee?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
       - gravitee_ratelimit_mongodb_uri=mongodb://mongodb:27017/gravitee?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
