@@ -5,7 +5,13 @@ from app.routers import auth, posts
 app = FastAPI(
     title="Social API POC",
     version="1.0.0",
-    description="API REST pour réseau social - POC 3 jours"
+    description="API REST pour réseau social - POC 3 jours",
+    # Ajout pour supporter le Gateway Gravitee
+    root_path="/social-api",
+    servers=[
+        {"url": "http://localhost:8000", "description": "Direct"},
+        {"url": "http://localhost:8082/social-api", "description": "Via Gravitee Gateway"}
+    ]
 )
 
 # CORS
